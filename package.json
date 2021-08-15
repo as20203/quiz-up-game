@@ -16,7 +16,7 @@
     "clean:build": "rimraf ./build",
     "clean:node_modules": "rimraf node_modules/",
     "prepare": "husky install",
-    "heroku-postbuild": "cd frontend && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
+    "heroku-postbuild": "npm run clean:build && tsc && mkdir build/frontend && cd frontend && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "keywords": [
