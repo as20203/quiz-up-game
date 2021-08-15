@@ -33,6 +33,11 @@
     ],
     "*.js": "eslint --cache --fix"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn type-check && lint-staged"
+    }
+  },
   "dependencies": {
     "axios": "^0.20.0",
     "bcryptjs": "^2.4.3",
