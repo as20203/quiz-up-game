@@ -7,6 +7,8 @@ import {
   QuizContentDescription,
   QuizGetStartedButton
 } from './elements';
+import history from 'MyHistory';
+
 export const Landing = () => {
   const [fade, setFade] = useState(false);
   useEffect(() => {
@@ -26,7 +28,12 @@ export const Landing = () => {
             <br />
             Select a quiz from a wide range of categories.
           </QuizContentDescription>
-          <QuizGetStartedButton marginTop={70} backgroundColor='#0073cf' textColor='white'>
+          <QuizGetStartedButton
+            onClick={() => history.push('/signup')}
+            marginTop={70}
+            backgroundColor='#0073cf'
+            textColor='white'
+          >
             {' '}
             Get Started{' '}
           </QuizGetStartedButton>

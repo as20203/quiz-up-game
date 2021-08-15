@@ -1,5 +1,6 @@
 import { WithStyles, withStyles } from '@material-ui/core/styles';
 import { Container, ContainerProps } from '@material-ui/core';
+import { Link, LinkProps } from 'react-router-dom';
 export const HeaderMain = withStyles({
   root: {
     width: '100%',
@@ -12,9 +13,6 @@ export const HeaderMain = withStyles({
     justifyContent: 'flex-start',
     top: '0',
     left: '0'
-    // '@media (min-width: 1280px)': {
-    //   maxWidth: 'none'
-    //}
   }
 })(({ classes, ...other }: WithStyles & ContainerProps) => (
   <Container className={classes.root} {...other} />
@@ -22,21 +20,36 @@ export const HeaderMain = withStyles({
 interface HeaderItemProps {
   marginLeft?: string;
 }
+interface HeaderItemProps {
+  padding?: number;
+  display?: 'flex' | 'grid';
+  justifyContent?: 'center' | 'flex-start' | 'flex-end' | 'space-between';
+  hoverBackground?: string;
+  fontSize?: number;
+  height?: number;
+  active?: boolean;
+  activeBackground?: string;
+  marginLeft?: string;
+}
 export const HeaderItem = withStyles<string, {}, HeaderItemProps>({
   root: {
-    width: '80px',
-    height: '25px',
-    display: 'flex',
-    justifyContent: 'center',
-    color: 'black',
-    alignItems: 'center',
-    borderRadius: '5px',
-    background: '#d3d3d3',
+    marginLeft: ({ marginLeft }) => marginLeft || 'none',
+    height: ({ height }) => (height ? `${height}px` : 'auto'),
+    fontSize: ({ fontSize }) => (fontSize ? `${fontSize}px` : '16px'),
+    display: ({ display }) => display || 'initial',
+    padding: ({ padding }) => (padding ? `${padding}px` : 'none'),
+    justifyContent: ({ justifyContent }) => justifyContent || 'flex-start',
+    background: ({ active, activeBackground }) =>
+      active && activeBackground ? activeBackground : 'initial',
+    color: 'white',
+    textDecoration: 'none',
     '&:hover': {
-      backgroundColor: '#C0C0C0'
-    },
-    marginLeft: ({ marginLeft }) => marginLeft || '0px'
+      color: 'white',
+      textDecoration: 'none',
+      background: ({ hoverBackground, active, activeBackground }) =>
+        active && activeBackground ? activeBackground : hoverBackground || '#4d4b50'
+    }
   }
-})(({ classes, ...other }: WithStyles & ContainerProps) => (
-  <div className={classes.root} {...other} />
+})(({ classes, ...other }: WithStyles & LinkProps & React.RefAttributes<HTMLAnchorElement>) => (
+  <Link className={classes.root} {...other} />
 ));
