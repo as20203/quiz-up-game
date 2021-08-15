@@ -38,7 +38,7 @@ export const QuizContent = withStyles({
     backgroundColor: '#bdd4e7',
     backgroundImage: 'linear-gradient(315deg, #bdd4e7 0%, #8693ab 74%)',
     height: '400px',
-    width: '100%',
+    width: '80%',
     margin: '0 auto',
     color: '#383838	'
   }
