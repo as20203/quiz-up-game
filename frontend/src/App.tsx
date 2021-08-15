@@ -1,6 +1,6 @@
-import { Typography } from '@material-ui/core';
+import { Landing } from 'components';
 const App = () => {
-  return <Typography variant='h4'>Hello World</Typography>;
+  return <Landing />;
 };
 
 export default App;
