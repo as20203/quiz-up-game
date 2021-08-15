@@ -10,7 +10,7 @@ import {
 export const Landing = () => {
   const [fade, setFade] = useState(false);
   useEffect(() => {
-    const timout = setTimeout(() => setFade(true), 2000);
+    const timout = setTimeout(() => setFade(true), 500);
     return () => clearTimeout(timout);
   }, [fade]);
   return (

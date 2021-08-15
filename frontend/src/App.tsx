@@ -1,6 +1,11 @@
-import { Landing } from 'components';
+import { Landing, Header } from 'components';
 const App = () => {
-  return <Landing />;
+  return (
+    <>
+      <Header />
+      <Landing />;
+    </>
+  );
 };
 
 export default App;
