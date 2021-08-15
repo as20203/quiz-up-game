@@ -11,7 +11,7 @@ register({
   paths: compilerOptions.paths
 });
 import express, { Application } from 'express';
-// import mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import { json, urlencoded } from 'body-parser';
 import passport from 'passport';
 import swaggerJSDoc from 'swagger-jsdoc';
@@ -29,35 +29,35 @@ const corsOptions = {
   credentials: true
 };
 app.use(cors(corsOptions));
-//MongoDB terminal connection string
+// MongoDB terminal connection string
 // mongo "mongodb+srv://cluster0-bpzyc.mongodb.net/radon-app" --username jawadzaheer123
-//Setting up database connection.
-// const db = process.env.DATABASE_URL || 'mongodb://localhost/radon-app';
-// const databaseConnection = (db: string) => {
-//   const connect = () => {
-//     mongoose
-//       .connect(db, {
-//         useNewUrlParser: true,
-//         useCreateIndex: true,
-//         useUnifiedTopology: true,
-//         useFindAndModify: false
-//       })
-//       .then(() => {
-//         // eslint-disable-next-line no-console
-//         return console.log(`Successfully connected to ${db}`);
-//       })
-//       .catch(error => {
-//         // eslint-disable-next-line no-console
-//         console.log('Error connecting to database: ', error);
-//         return process.exit(1);
-//       });
-//   };
-//   connect();
+// Setting up database connection.
+const db = process.env.DATABASE_URL || 'mongodb://localhost/quiz-up';
+const databaseConnection = (db: string) => {
+  const connect = () => {
+    mongoose
+      .connect(db, {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false
+      })
+      .then(() => {
+        // eslint-disable-next-line no-console
+        return console.log(`Successfully connected to ${db}`);
+      })
+      .catch(error => {
+        // eslint-disable-next-line no-console
+        console.log('Error connecting to database: ', error);
+        return process.exit(1);
+      });
+  };
+  connect();
 
-//   mongoose.connection.on('disconnected', connect);
-// };
+  mongoose.connection.on('disconnected', connect);
+};
 
-// databaseConnection(db);
+databaseConnection(db);
 
 //Importing authMiddleware
 // import { authenticateUser } from '~/middleware';

@@ -1,6 +1,6 @@
-# Laptop Store APIs
+# Quiz Up APIs
 
-Laptop Store API are the set of API's for the Laptop company in Islamabad.
+Quiz UP API are the set of API's for the trivia quiz game.
 
 # Development Server
 
@@ -22,6 +22,9 @@ Naviagate to the root directory and run the following commands below
 ## For development build
 
 ```bash
+cd frontend
+npm install
+cd ..
 npm install
 npm run dev
 ```
@@ -29,9 +32,5 @@ npm run dev
 ## For production build
 
 ```bash
-npm run build
+npm run heroku post-build
 ```
-
-## Whitelist your IP Address in AtlasDB Cluster
-
-You have to get your ip address whitelisted in mongoDB Atlas for using the database.
