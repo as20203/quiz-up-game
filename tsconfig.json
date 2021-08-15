@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./apis",
+    "paths": {
+      "~/models": ["./models"],
+      "~/routes": ["./routes"],
+      "~/middleware": ["./middleware"],
+      "~/controllers": ["./controllers"],
+      "~/utils": ["./utils"],
+      "~/data": ["./data"],
+      "~/types": ["./types"],
+      "~/express": ["./@types"]
+    },
+    "allowJs": false,
+    "strict": true,
+    "declaration": true,
+    "types": ["node"],
+    "lib": ["ES2017", "ES6", "ES7", "DOM"],
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "target": "ESNext",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitAny": true,
+    "outDir": "build"
+  },
+  "exclude": ["node_modules", "build", "frontend"]
+}

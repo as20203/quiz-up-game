@@ -1,0 +1,17 @@
+node_modules/
+# exclude everything
+src/data/companyLogos/*
+src/data/profilePics/*
+src/data/floorPlans/*
+src/data/propertyPictures/*
+build/
+# exception to the rule
+!.keep
+
+
+yarn.lock
+package-lock.json
+yarn-error.log
+.idea
+.vscode
+.env
