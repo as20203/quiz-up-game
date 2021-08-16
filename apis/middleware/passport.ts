@@ -8,15 +8,9 @@ import { FailureMessages, PassportMiddleware } from '~/types';
 import { comparePasswordHash, failure } from '~/utils';
 const environment = process.env;
 
-const cookieExtractor = (request: Request): string => {
-  let token = null;
-  if (request && request.cookies) token = request.cookies['AUTH-COOKIE'];
-  return token;
-};
-
 export const authenticateUser = (passport: PassportStatic) => {
   const opts: StrategyOptions = {
-    jwtFromRequest: cookieExtractor,
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: environment.JWT_SECRET
   };
   passport.use(
@@ -36,73 +30,27 @@ export const authenticateUser = (passport: PassportStatic) => {
     })
   );
 
-  const resetPasswordOptions: StrategyOptions = {
-    jwtFromRequest: ExtractJwt.fromBodyField('token'),
-    secretOrKey: environment.JWT_SECRET
-  };
-  passport.use(
-    'updatePassword',
-    new JwtStrategy(resetPasswordOptions, async function(jwtPayload, done) {
-      try {
-        const user = await User.findOne({ _id: jwtPayload.user._id })
-          .select('password')
-          .exec();
-        //var user = await employee.findOne({_id: jwt_payload.user._id}).exec();
-        if (!user) {
-          //If the user isn't found in the database, return a message
-          return done(null, false, { message: 'User not found.' });
-        }
-        //Send the user information to the next middleware
-        return done(null, { ...user.toObject() }, { message: 'Logged in successfully.' });
-      } catch (error) {
-        return done(error);
-      }
-    })
-  );
-
-  const changePasswordOptions: StrategyOptions = {
-    jwtFromRequest: cookieExtractor,
-    secretOrKey: environment.JWT_SECRET
-  };
-  passport.use(
-    'changePassword',
-    new JwtStrategy(changePasswordOptions, async function(jwtPayload, done) {
-      try {
-        const user = await User.findOne({ _id: jwtPayload.user._id })
-          .select('password')
-          .exec();
-        if (!user) {
-          //If the user isn't found in the database, return a message
-          return done(null, false, { message: 'User not found.' });
-        }
-        //Send the user information to the next middleware
-        return done(null, user.toObject(), { message: 'Logged in successfully.' });
-      } catch (error) {
-        return done(error);
-      }
-    })
-  );
   //Create a passport middleware to handle User login
   passport.use(
     'local.one',
     new LocalStrategy(
       {
-        usernameField: 'email',
+        usernameField: 'username',
         passwordField: 'password'
       },
-      async (email, password, done) => {
+      async (username, password, done) => {
         try {
           const validationErrors: FailureMessages[] = [];
           //Find the user associated with the email provided by the user
           const foundUser = await User.findOne({
-            email
+            username
           })
             .select('-__v')
             .exec();
           if (!foundUser) {
             validationErrors.push({
-              fieldName: 'email',
-              errorMessage: 'Email address is incorrect.'
+              fieldName: 'username',
+              errorMessage: 'username is incorrect.'
             });
             return done(validationErrors, false);
             //If the user isn't found in the database, return a message
@@ -121,46 +69,7 @@ export const authenticateUser = (passport: PassportStatic) => {
           }
           //Send the user information to the next middleware
 
-          return done(
-            null,
-            { ...foundUser.toObject(), category: 'employee' },
-            { message: 'Logged in successfully.' }
-          );
-        } catch (error) {
-          return done(error);
-        }
-      }
-    )
-  );
-
-  passport.use(
-    'forgotPassword',
-    new LocalStrategy(
-      {
-        usernameField: 'email',
-        passwordField: 'email'
-      },
-      async (email, _, done) => {
-        try {
-          const validationErrors: FailureMessages[] = [];
-          //Find the user associated with the email provided by the user
-          const user = await User.findOne({
-            email
-          }).exec();
-          if (!user) {
-            validationErrors.push({
-              fieldName: 'email',
-              errorMessage: 'Email address is incorrect.'
-            });
-            //If the user isn't found in the database, return a message
-            return done(validationErrors, false);
-          }
-          //Send the user information to the next middleware
-          return done(
-            null,
-            { ...user.toObject(), category: 'employee' },
-            { message: 'Found Successfully.' }
-          );
+          return done(null, { ...foundUser.toObject() }, { message: 'Logged in successfully.' });
         } catch (error) {
           return done(error);
         }
@@ -186,8 +95,9 @@ export const authenticationHandler = (middleware: PassportMiddleware) => {
 
 export const checkIfAdmin = (request: Request, response: Response, next: NextFunction) => {
   const {
-    user: { role }
+    user: { category }
   } = request;
-  if (role !== 'admin') return failure(response, `User is not admin`, 'Authentication Failed', 401);
+  if (category !== 'admin')
+    return failure(response, `User is not admin`, 'Authentication Failed', 401);
   return next();
 };

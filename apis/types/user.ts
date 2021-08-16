@@ -1,8 +1,5 @@
 import { UserSchemaOutput } from '~/types';
-
-export type Role = 'admin' | 'user';
-export type Category = 'customer' | 'employee';
-
+export type UserCategory = 'player' | 'contributor' | 'admin';
 export interface User extends UserSchemaOutput {
-  category: Category;
+  category: UserCategory;
 }

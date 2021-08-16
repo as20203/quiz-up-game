@@ -6,7 +6,7 @@ import { User } from '~/models';
 /**
  * @swagger
  *
- * /users/:
+ * /api/users/:
  *   post:
  *     tags:
  *       - User
@@ -19,11 +19,13 @@ import { User } from '~/models';
  *             properties:
  *               name:
  *                 type: string
- *               email:
+ *               username:
  *                 type: string
  *               password:
  *                 type: string
- *
+ *               category:
+ *                 type: string
+ *                 enum: [player, contributor, admin]
  *     responses:
  *       200:
  *         description: Successfully created firm
@@ -39,7 +41,7 @@ export const addUser = async (request: Request<UserController>, response: Respon
     if (!newUser.isExecuted) {
       return failure(response, newUser.error, `Couldn't save user.`);
     }
-    return success(response, { user: newUser.data }, `Successfully saved mitigation firm.`);
+    return success(response, { user: newUser.data }, `Successfully saved user.`);
   } catch (error) {
     return failure(response, error.message, `Couldn't save user`);
   }
@@ -48,7 +50,7 @@ export const addUser = async (request: Request<UserController>, response: Respon
 /**
  * @swagger
  *
- *  /users/{id}:
+ *  /api/users/{id}:
  *   get:
  *     tags:
  *       - User
@@ -81,11 +83,7 @@ export const getUser = async (request: Request, response: Response) => {
         retrievedUser.statusCode
       );
     }
-    return success(
-      response,
-      { user: retrievedUser.data },
-      'Successfully retrieved mitigation firm details.'
-    );
+    return success(response, { user: retrievedUser.data }, 'Successfully retrieved user details.');
   } catch (error) {
     return failure(response, error.message, `Couldn't retrieve user`);
   }
@@ -94,7 +92,7 @@ export const getUser = async (request: Request, response: Response) => {
 /**
  * @swagger
  *
- * /users/{id}:
+ * /api/users/{id}:
  *   patch:
  *     tags:
  *       - User
@@ -114,17 +112,15 @@ export const getUser = async (request: Request, response: Response) => {
  *           schema:
  *             type: object
  *             properties:
- *               company:
+ *               name:
  *                 type: string
- *               owner:
+ *               username:
  *                 type: string
- *               licenseNumber:
+ *               password:
  *                 type: string
- *               phoneNumber:
+ *               category:
  *                 type: string
- *               email:
- *                 type: string
- *                 format: email
+ *                 enum: [player, contributor, admin]
  *
  *     responses:
  *       200:
@@ -155,7 +151,7 @@ export const updateUser = async (request: Request<Partial<UserController>>, resp
 /**
  * @swagger
  *
- *  /users/{id}:
+ *  /api/users/{id}:
  *   delete:
  *     tags:
  *       - User

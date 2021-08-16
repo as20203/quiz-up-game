@@ -1,6 +1,6 @@
-import { FailureMessages, Request, UserController, UserSchemaData } from '~/types';
+import { FailureMessages, Request, UserCategory, UserController, UserSchemaData } from '~/types';
 import { NextFunction, Response } from 'express';
-import { failure, validators } from '~/utils';
+import { failure, validators, constants, generateHash } from '~/utils';
 
 const userNameValidator = (validationErrors: FailureMessages[], name: string) => {
   const nameValidator = validators.validateString(name);
@@ -14,11 +14,11 @@ const userNameValidator = (validationErrors: FailureMessages[], name: string) =>
   return true;
 };
 
-const userEmailValidator = (validationErrors: FailureMessages[], email: string) => {
-  const nameValidator = validators.validateEmail(email);
+const usernameValidator = (validationErrors: FailureMessages[], username: string) => {
+  const nameValidator = validators.validateString(username);
   if (!nameValidator.isValid) {
     validationErrors.push({
-      fieldName: 'name',
+      fieldName: 'username',
       errorMessage: nameValidator.message
     });
     return false;
@@ -37,55 +37,39 @@ const userPasswordValidator = (validationErrors: FailureMessages[], password: st
   }
   return true;
 };
-export const validateEmployeeUser = (
-  request: Request<UserController>,
-  response: Response,
-  next: NextFunction
-) => {
-  try {
-    const {
-      body: { name, email, password }
-    } = request;
-    const validationErrors: FailureMessages[] = [];
-    userNameValidator(validationErrors, name);
-    userEmailValidator(validationErrors, email);
-    userPasswordValidator(validationErrors, password);
 
-    const client: UserSchemaData = {
-      name,
-      email,
-      password,
-      role: 'admin'
-    };
-    if (validationErrors.length > 0) {
-      return failure(response, validationErrors, `Couldn't validate user form fields`, 400);
-    } else {
-      request.client = client;
-      return next();
-    }
-  } catch (error) {
-    return failure(response, error.message, `Couldn't validate user form fields`);
+const userCategoryValidator = (validationErrors: FailureMessages[], role: UserCategory) => {
+  const categoryValidator = validators.validateFromEnum(role, constants.enums.userTypesEnum);
+  if (!categoryValidator.isValid) {
+    validationErrors.push({
+      fieldName: 'category',
+      errorMessage: categoryValidator.message
+    });
+    return false;
   }
+  return true;
 };
-export const validateClientUser = (
+export const validateUser = async (
   request: Request<UserController>,
   response: Response,
   next: NextFunction
 ) => {
   try {
     const {
-      body: { name, email, password }
+      body: { name, username, password, category }
     } = request;
     const validationErrors: FailureMessages[] = [];
     userNameValidator(validationErrors, name);
-    userEmailValidator(validationErrors, email);
+    usernameValidator(validationErrors, username);
     userPasswordValidator(validationErrors, password);
+    userCategoryValidator(validationErrors, category);
+    const hashedPassword = await generateHash(password);
 
     const client: UserSchemaData = {
       name,
-      email,
-      password,
-      role: 'user'
+      username,
+      password: hashedPassword,
+      category
     };
     if (validationErrors.length > 0) {
       return failure(response, validationErrors, `Couldn't validate user form fields`, 400);
@@ -98,14 +82,14 @@ export const validateClientUser = (
   }
 };
 
-export const validateModifiedUser = (
+export const validateModifiedUser = async (
   request: Request<Partial<UserController>>,
   response: Response,
   next: NextFunction
 ) => {
   try {
     const {
-      body: { name, email, password }
+      body: { name, username, password, category }
     } = request;
     const client = {} as UserSchemaData;
     const validationErrors: FailureMessages[] = [];
@@ -113,14 +97,19 @@ export const validateModifiedUser = (
       const usernameValidator = userNameValidator(validationErrors, name);
       if (usernameValidator) client.name = name;
     }
-    if (email) {
-      const emailValidator = userEmailValidator(validationErrors, email);
-      if (emailValidator) client.email = email;
+    if (username) {
+      const emailValidator = usernameValidator(validationErrors, username);
+      if (emailValidator) client.username = username;
     }
 
     if (password) {
       const passwordValidator = userPasswordValidator(validationErrors, password);
-      if (passwordValidator) client.password = password;
+      if (passwordValidator) client.password = await generateHash(password);
+    }
+
+    if (category) {
+      const categoryValidator = userCategoryValidator(validationErrors, category);
+      if (categoryValidator) client.category = category;
     }
 
     if (validationErrors.length > 0) {
