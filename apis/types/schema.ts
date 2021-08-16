@@ -1,9 +1,9 @@
 import { Document } from 'mongoose';
-import { Role } from '~/types';
+import { UserCategory } from '~/types';
 
 export interface UserSchema extends Document {
   name: string;
-  email: string;
+  username: string;
   password: string;
-  role: Role;
+  category: UserCategory;
 }

@@ -2,14 +2,14 @@ import { Router } from 'express';
 import { addUser, getUser, updateUser, deleteUser } from '~/controllers';
 import {
   authenticationHandler,
-  validateClientUser,
+  validateUser,
   checkIfAdmin,
   validateModifiedUser
 } from '~/middleware';
 
 export const userRouter = Router();
 
-userRouter.post('/', validateClientUser, addUser);
+userRouter.post('/', validateUser, addUser);
 
 userRouter.get('/:id', getUser);
 

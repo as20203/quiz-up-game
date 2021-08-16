@@ -1,8 +1,8 @@
-import { Role } from '~/types';
+import { UserCategory } from '~/types';
 
 export interface UserSchemaData {
   name?: string;
-  email?: string;
+  username?: string;
   password?: string;
-  role?: Role;
+  category?: UserCategory;
 }

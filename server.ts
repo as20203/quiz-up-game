@@ -59,17 +59,18 @@ const databaseConnection = (db: string) => {
 
 databaseConnection(db);
 
-//Importing authMiddleware
-// import { authenticateUser } from '~/middleware';
-// authenticateUser(passport);
+// Importing authMiddleware
+import { authenticateUser } from '~/middleware';
+authenticateUser(passport);
 //Importing routes
-import { userRouter } from '~/routes';
-app.use('/user', userRouter);
+import { authenticationRouter, userRouter } from '~/routes';
+app.use('/api/users', userRouter);
+app.use('/api/auth', authenticationRouter);
 
 const swaggerDefinition = {
   openapi: '3.0.0',
   info: {
-    title: 'LaptopStore',
+    title: 'Quiz Game APIs',
     version: '1.0.0'
   },
   components: {
@@ -85,7 +86,7 @@ const swaggerDefinition = {
 
 const options = {
   swaggerDefinition,
-  apis: ['./src/controllers/**/**.ts']
+  apis: ['./apis/controllers/**/**.ts']
 };
 // import { hello } from '~/routes';
 const swaggerSpec = swaggerJSDoc(options);

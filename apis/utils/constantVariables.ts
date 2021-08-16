@@ -33,7 +33,7 @@ export interface ConstantVariables {
 
 export const constants: ConstantVariables = {
   enums: {
-    userTypesEnum: ['admin', 'user']
+    userTypesEnum: ['player', 'contributor', 'admin']
   },
   messages: {
     //Add Clients
