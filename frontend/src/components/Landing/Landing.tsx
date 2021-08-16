@@ -9,7 +9,7 @@ import {
 } from './elements';
 import history from 'MyHistory';
 
-export const Landing = () => {
+const Landing = () => {
   const [fade, setFade] = useState(false);
   useEffect(() => {
     const timout = setTimeout(() => setFade(true), 500);
@@ -42,3 +42,5 @@ export const Landing = () => {
     </QuizMain>
   );
 };
+
+export { Landing };

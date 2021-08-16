@@ -3,6 +3,7 @@ import { Container, ContainerProps } from '@material-ui/core';
 import { Link, LinkProps } from 'react-router-dom';
 export const HeaderMain = withStyles({
   root: {
+    zIndex: 1,
     width: '100%',
     position: 'fixed',
     maxWidth: 'none',

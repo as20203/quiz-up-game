@@ -7,12 +7,11 @@ const App = () => {
       <Router history={history}>
         <Header />
         <Switch>
-          <Route exact path='/' component={Landing} />
           <Route path='/login' component={Login} />
           <Route path='/signup' component={Signup} />
+          <Route exact path='/' component={Landing} />
         </Switch>
       </Router>
-      <Landing />;
     </>
   );
 };
