@@ -3,6 +3,8 @@ import { InputFormGroup, OptionFormGroup } from 'components';
 import { useForm } from 'customHooks';
 import { FormEvent, useState } from 'react';
 import { Typography } from '@material-ui/core';
+import axios from 'axios';
+import history from 'MyHistory';
 export const Signup = () => {
   const [signup, handleSignup] = useForm({
     username: '',
@@ -19,11 +21,14 @@ export const Signup = () => {
   };
   const [disable, setDisable] = useState(false);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setDisable(true);
-    console.log(signup);
-    setDisable(false);
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    try {
+      event.preventDefault();
+      setDisable(true);
+      await axios.post('/api/users', signup);
+      setDisable(false);
+      history.replace('/login');
+    } catch (error) {}
   };
   return (
     <SignupMain>

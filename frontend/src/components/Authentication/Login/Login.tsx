@@ -3,6 +3,8 @@ import { InputFormGroup } from 'components';
 import { useForm } from 'customHooks';
 import { FormEvent, useState } from 'react';
 import { Typography } from '@material-ui/core';
+import axios from 'axios';
+import history from 'MyHistory';
 export const Login = () => {
   const [login, handleLogin] = useForm({ username: '', password: '' });
   const styles = {
@@ -14,11 +16,18 @@ export const Login = () => {
   };
   const [disable, setDisable] = useState(false);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setDisable(true);
-    console.log(login);
-    setDisable(false);
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    try {
+      event.preventDefault();
+      setDisable(true);
+      const {
+        data: { token }
+      } = await axios.post('/api/auth/login', login);
+      console.log(token);
+      localStorage.setItem('token', token);
+      setDisable(false);
+      history.replace('/');
+    } catch (error) {}
   };
   return (
     <LoginMain>
