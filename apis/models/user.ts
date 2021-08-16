@@ -20,7 +20,7 @@ User.getUser = async userId => {
         _id: userId
       });
       if (retrievedUser) {
-        return modelSuccessResponse(retrievedUser);
+        return modelSuccessResponse(retrievedUser.toObject());
       } else {
         return modelFailureResponse(`Couldn't find user.`, 404);
       }

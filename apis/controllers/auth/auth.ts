@@ -45,8 +45,32 @@ export const login = async (request: Request<AuthController>, response: Response
     {
       token,
       userId: request.user._id,
-      employee: user
+      user
     },
     constants.messages.successfulLogin
   );
+};
+
+/**
+ * @swagger
+ *
+ *   /api/auth/verify-token:
+ *   post:
+ *     tags:
+ *       - Users - Auth
+ *     summary: Verify auth token
+ *     security:
+ *      - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: login successful
+ *       400:
+ *         description: Error from user end
+ *       500:
+ *         description: Internal Server Error
+ */
+
+export const verifyToken = async (request: Request, response: Response) => {
+  const { user } = request;
+  return success(response, { user }, `Successfully retrieved user.`);
 };

@@ -1,11 +1,14 @@
 import { LoginMain, LoginForm, LoginButton } from './elements';
 import { InputFormGroup } from 'components';
 import { useForm } from 'customHooks';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useContext, useState } from 'react';
 import { Typography } from '@material-ui/core';
 import axios from 'axios';
 import history from 'MyHistory';
+import { authContext } from 'services';
 export const Login = () => {
+  const [, dispatch] = useContext(authContext);
+
   const [login, handleLogin] = useForm({ username: '', password: '' });
   const styles = {
     input: {
@@ -21,13 +24,15 @@ export const Login = () => {
       event.preventDefault();
       setDisable(true);
       const {
-        data: { token }
+        data: { token, user }
       } = await axios.post('/api/auth/login', login);
-      console.log(token);
+      dispatch({ type: 'authenticated', user, value: true });
       localStorage.setItem('token', token);
       setDisable(false);
       history.replace('/');
-    } catch (error) {}
+    } catch (error) {
+      setDisable(false);
+    }
   };
   return (
     <LoginMain>
