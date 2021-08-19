@@ -101,3 +101,13 @@ export const checkIfAdmin = (request: Request, response: Response, next: NextFun
     return failure(response, `User is not admin`, 'Authentication Failed', 401);
   return next();
 };
+
+export const checkCategory = (request: Request, response: Response, next: NextFunction) => {
+  const {
+    body: { category: userCategory },
+    user
+  } = request;
+  if (userCategory !== 'admin') return next();
+  else if (userCategory === 'admin' && user && user.category === 'admin') return next();
+  return failure(response, `User is not admin`, 'Authentication Failed', 401);
+};

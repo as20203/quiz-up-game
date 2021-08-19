@@ -28,7 +28,7 @@ import { User } from '~/models';
  *                 enum: [player, contributor, admin]
  *     responses:
  *       200:
- *         description: Successfully created firm
+ *         description: Successfully created user
  *       400:
  *         description: Error from user end
  *       500:
@@ -55,6 +55,8 @@ export const addUser = async (request: Request<UserController>, response: Respon
  *     tags:
  *       - User
  *     summary: Get Details of a specific user
+ *     security:
+ *      - bearerAuth: []
  *     parameters:
  *      - in: path
  *        name: id
@@ -97,6 +99,8 @@ export const getUser = async (request: Request, response: Response) => {
  *     tags:
  *       - User
  *     summary: Update a  Specific user.
+ *     security:
+ *      - bearerAuth: []
  *
  *     parameters:
  *      - in: path
@@ -124,7 +128,7 @@ export const getUser = async (request: Request, response: Response) => {
  *
  *     responses:
  *       200:
- *         description: Successfully created firm
+ *         description: Successfully updated user
  *       400:
  *         description: Error from user end
  *       500:
@@ -156,6 +160,8 @@ export const updateUser = async (request: Request<Partial<UserController>>, resp
  *     tags:
  *       - User
  *     summary: Delete a user.
+ *     security:
+ *      - bearerAuth: []
  *     parameters:
  *      - in: path
  *        name: id

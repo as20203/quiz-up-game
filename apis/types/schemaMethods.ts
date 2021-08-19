@@ -1,4 +1,12 @@
-import { UserSchema, UserSchemaData, SchemaMethodsResponse, UserSchemaOutput } from '~/types';
+import {
+  UserSchema,
+  UserSchemaData,
+  CategorySchema,
+  SchemaMethodsResponse,
+  UserSchemaOutput,
+  CategorySchemaData,
+  CategorySchemaOutput
+} from '~/types';
 import { Model } from 'mongoose';
 
 export interface UserSchemaMethods extends Model<UserSchema> {
@@ -9,4 +17,17 @@ export interface UserSchemaMethods extends Model<UserSchema> {
     userId: string,
     data: UserSchemaData
   ): Promise<SchemaMethodsResponse<UserSchemaOutput>>;
+}
+
+export interface CategorySchemaMethods extends Model<CategorySchema> {
+  save(data: CategorySchemaData): Promise<SchemaMethodsResponse<CategorySchemaOutput>>;
+  getCategory(categoryId: string): Promise<SchemaMethodsResponse<CategorySchemaOutput>>;
+  deleteCategory(category: string): Promise<SchemaMethodsResponse<CategorySchemaOutput>>;
+  updateCategory(
+    categoryId: string,
+    data: CategorySchemaData
+  ): Promise<SchemaMethodsResponse<CategorySchemaOutput>>;
+  getCategories(
+    conditions: Record<string, string | number> | {}
+  ): Promise<SchemaMethodsResponse<CategorySchemaOutput[]>>;
 }

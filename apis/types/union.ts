@@ -1,6 +1,9 @@
-import { PaginatedResults, UserSchemaOutput, UserController } from '~/types';
+import { PaginatedResults, UserSchemaOutput, UserController, CategorySchemaOutput } from '~/types';
 
-export type SchemaMethodsDataResponse = UserSchemaOutput;
+export type SchemaMethodsDataResponse =
+  | UserSchemaOutput
+  | CategorySchemaOutput
+  | CategorySchemaOutput[];
 
 export type PaginatedSchemas = UserSchemaOutput[];
 
