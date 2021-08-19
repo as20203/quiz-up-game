@@ -11,3 +11,7 @@ export interface AuthController {
   username: string;
   password: string;
 }
+
+export interface CategoryController {
+  name: string;
+}

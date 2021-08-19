@@ -7,3 +7,9 @@ export interface UserSchema extends Document {
   password: string;
   category: UserCategory;
 }
+
+export interface CategorySchema extends Document {
+  name: string;
+  addedOn: Date;
+  addedBy: string;
+}

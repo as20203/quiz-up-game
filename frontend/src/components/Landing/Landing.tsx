@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Fade } from '@material-ui/core';
 import {
   QuizMain,
@@ -7,9 +7,17 @@ import {
   QuizContentDescription,
   QuizGetStartedButton
 } from './elements';
+import { authContext } from 'services';
 import history from 'MyHistory';
 
 const Landing = () => {
+  const [authentication] = useContext(authContext);
+  const onClick = () => {
+    const { user } = authentication;
+    if (user && user.category === 'admin') history.push('/categories');
+    else if (user && user.category === 'admin') history.push('/signup');
+    else history.push('/');
+  };
   const [fade, setFade] = useState(false);
   useEffect(() => {
     const timout = setTimeout(() => setFade(true), 500);
@@ -29,7 +37,7 @@ const Landing = () => {
             Select a quiz from a wide range of categories.
           </QuizContentDescription>
           <QuizGetStartedButton
-            onClick={() => history.push('/signup')}
+            onClick={() => onClick()}
             marginTop={70}
             backgroundColor='#0073cf'
             textColor='white'

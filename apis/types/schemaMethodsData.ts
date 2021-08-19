@@ -6,3 +6,8 @@ export interface UserSchemaData {
   password?: string;
   category?: UserCategory;
 }
+
+export interface CategorySchemaData {
+  name?: string;
+  addedBy?: string;
+}
