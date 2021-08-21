@@ -1,59 +1,125 @@
-import { CategoriesMain, CategoriesForm, CategoriesButton } from './elements';
-import { InputFormGroup } from 'components';
-import { useForm } from 'customHooks';
-import { FormEvent, useState } from 'react';
-import { Typography } from '@material-ui/core';
+import { CategoriesMain } from './elements';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Table, SimpleModal } from 'components';
+import { BodyRow, CategorySchemaOutput } from 'types';
+import { AddCategoriesForm, EditCategoriesForm, DeleteCategoriesForm } from './CategoriesForm';
+import { Add } from '@material-ui/icons';
+import { ModalCategories } from 'types';
+import { IconButton, Typography } from '@material-ui/core';
 export const CategoriesPage = () => {
-  const [categories, handleCategories, setCategories] = useForm({
-    name: ''
-  });
-  const styles = {
-    input: {
-      border: 'none',
-      borderBottom: '1px solid #ced4da',
-      boxShadow: 'none'
+  const [tableBodyRows, setTableBodyRow] = useState<BodyRow[]>([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [categories, setCategories] = useState<CategorySchemaOutput[]>([]);
+  const [selectedElementId, setSelectedElementId] = useState('');
+  const [modalCategory, setModalCategory] = useState<ModalCategories>('');
+  const getModalComponent = (category: ModalCategories) => {
+    switch (category) {
+      case 'add':
+        return (
+          <AddCategoriesForm
+            setUpdatedCategories={setCategories}
+            setModalCategory={setModalCategory}
+            setOpenModal={setOpenModal}
+          />
+        );
+      case 'edit':
+        const retrievedEditRow = categories.find(({ _id }) => _id === selectedElementId);
+        if (retrievedEditRow)
+          return (
+            <EditCategoriesForm
+              setUpdatedCategories={setCategories}
+              setModalCategory={setModalCategory}
+              setOpenModal={setOpenModal}
+              category={retrievedEditRow}
+            />
+          );
+        return undefined;
+      case 'delete':
+        const retrievedDeletedRow = categories.find(({ _id }) => _id === selectedElementId);
+        if (retrievedDeletedRow)
+          return (
+            <DeleteCategoriesForm
+              setUpdatedCategories={setCategories}
+              setModalCategory={setModalCategory}
+              setOpenModal={setOpenModal}
+              category={retrievedDeletedRow}
+            />
+          );
+        return undefined;
+
+      default:
+        return undefined;
     }
   };
-  const [disable, setDisable] = useState(false);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    try {
-      event.preventDefault();
-      setDisable(true);
-      await axios.post('/api/categories', categories);
-      setCategories({ name: '' });
-      setDisable(false);
-    } catch (error) {}
+  const setCategoryTableRows = (categories: CategorySchemaOutput[]) => {
+    const tableBodyRows = categories.map(({ name, _id }) => {
+      return {
+        _id,
+        rowData: [
+          {
+            value: name
+          },
+          {
+            value: 'actions'
+          }
+        ]
+      };
+    });
+    setTableBodyRow(tableBodyRows);
   };
-  return (
-    <CategoriesMain>
-      <CategoriesForm onSubmit={handleSubmit}>
-        <Typography variant='h3'> Add Category</Typography>
-        <InputFormGroup
-          style={styles.input}
-          label='Name:'
-          value={categories.name}
-          required={true}
-          onChange={event => {
-            handleCategories(event);
-          }}
-          type='text'
-          name='name'
-          id='name'
-          placeholder='Enter your name'
-        />
 
-        <CategoriesButton
-          textColor='white'
-          variant='contained'
-          disabled={disable}
-          backgroundColor={'#007bff'}
-          type='submit'
-        >
-          {disable ? 'Submitting' : 'Submit'}
-        </CategoriesButton>
-      </CategoriesForm>
-    </CategoriesMain>
+  useEffect(() => {
+    setCategoryTableRows(categories);
+  }, [categories]);
+
+  useEffect(() => {
+    const getCategories = async () => {
+      try {
+        const {
+          data: { categories }
+        }: { data: { categories: CategorySchemaOutput[] } } = await axios.get('/api/categories');
+
+        setCategories(categories);
+        setCategoryTableRows(categories);
+      } catch {}
+    };
+
+    getCategories();
+  }, []);
+  return (
+    <>
+      {tableBodyRows.length > 0 && (
+        <CategoriesMain>
+          <Typography variant='h3'> Categories</Typography>
+          {tableBodyRows.length > 0 && (
+            <>
+              <IconButton
+                onClick={() => {
+                  setOpenModal(true);
+                  setModalCategory('add');
+                }}
+                style={{ alignSelf: 'flex-end' }}
+              >
+                <Add />
+              </IconButton>
+              <SimpleModal
+                setOpenModal={setOpenModal}
+                openModal={openModal}
+                children={getModalComponent(modalCategory)}
+              />
+              <Table
+                tableHeadRows={[{ value: 'Name' }, { value: 'Actions' }]}
+                tableBodyRows={tableBodyRows}
+                setOpenModal={setOpenModal}
+                setModalCategory={setModalCategory}
+                setSelectedElementId={setSelectedElementId}
+              />
+            </>
+          )}
+        </CategoriesMain>
+      )}
+    </>
   );
 };

@@ -123,7 +123,7 @@ export const getCategories = async (_: Request, response: Response) => {
     }
     return success(
       response,
-      { category: retrievedCategories.data },
+      { categories: retrievedCategories.data },
       'Successfully retrieved categories details.'
     );
   } catch (error) {
