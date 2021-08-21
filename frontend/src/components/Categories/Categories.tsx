@@ -1,59 +1,43 @@
-import { CategoriesMain, CategoriesForm, CategoriesButton } from './elements';
-import { InputFormGroup } from 'components';
-import { useForm } from 'customHooks';
-import { FormEvent, useState } from 'react';
-import { Typography } from '@material-ui/core';
+import { CategoriesMain } from './elements';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
-export const CategoriesPage = () => {
-  const [categories, handleCategories, setCategories] = useForm({
-    name: ''
-  });
-  const styles = {
-    input: {
-      border: 'none',
-      borderBottom: '1px solid #ced4da',
-      boxShadow: 'none'
-    }
-  };
-  const [disable, setDisable] = useState(false);
+import { Table } from 'components';
+import { BodyRow, CategorySchemaOutput } from 'types';
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+export const CategoriesPage = () => {
+  const [tableBodyRows, setTableBodyRow] = useState<BodyRow[]>([]);
+  const getCategories = async () => {
     try {
-      event.preventDefault();
-      setDisable(true);
-      await axios.post('/api/categories', categories);
-      setCategories({ name: '' });
-      setDisable(false);
-    } catch (error) {}
+      const {
+        data: { categories }
+      }: { data: { categories: CategorySchemaOutput[] } } = await axios.get('/api/categories');
+      const tableBodyRows = categories.map(({ name, _id }) => {
+        return {
+          _id,
+          rowData: [
+            {
+              value: name
+            },
+            {
+              value: 'actions'
+            }
+          ]
+        };
+      });
+      setTableBodyRow(tableBodyRows);
+    } catch {}
   };
+  useEffect(() => {
+    getCategories();
+  }, []);
   return (
     <CategoriesMain>
-      <CategoriesForm onSubmit={handleSubmit}>
-        <Typography variant='h3'> Add Category</Typography>
-        <InputFormGroup
-          style={styles.input}
-          label='Name:'
-          value={categories.name}
-          required={true}
-          onChange={event => {
-            handleCategories(event);
-          }}
-          type='text'
-          name='name'
-          id='name'
-          placeholder='Enter your name'
+      {tableBodyRows.length > 0 && (
+        <Table
+          tableHeadRows={[{ value: 'Name' }, { value: 'Actions' }]}
+          tableBodyRows={tableBodyRows}
         />
-
-        <CategoriesButton
-          textColor='white'
-          variant='contained'
-          disabled={disable}
-          backgroundColor={'#007bff'}
-          type='submit'
-        >
-          {disable ? 'Submitting' : 'Submit'}
-        </CategoriesButton>
-      </CategoriesForm>
+      )}
     </CategoriesMain>
   );
 };

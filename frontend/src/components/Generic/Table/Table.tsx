@@ -1,5 +1,5 @@
 import {
-  Table as MUITalbe,
+  Table as MUITable,
   TableBody,
   TableCell,
   TableContainer,
@@ -7,43 +7,41 @@ import {
   TableRow,
   Paper
 } from '@material-ui/core';
-
-interface Headrow {
-  value: string;
-}
-interface RowData {
-  value: string;
-  align?: 'left' | 'right' | 'inherit' | 'center' | 'justify';
-}
-interface BodyRow {
-  _id: string;
-  rowData: RowData[];
-}
+import { ActionsMenu } from 'components';
+import { Headrow, BodyRow } from 'types';
 interface TableProps {
-  tableHeadRow: Headrow[];
-  tableBodyRow: BodyRow[];
+  tableHeadRows: Headrow[];
+  tableBodyRows: BodyRow[];
 }
-export const Table = ({ tableHeadRow, tableBodyRow }: TableProps) => {
+export const Table = ({ tableHeadRows, tableBodyRows }: TableProps) => {
   return (
-    <TableContainer component={Paper}>
-      <MUITalbe>
+    <TableContainer style={{ width: '80%' }} component={Paper}>
+      <MUITable>
         <TableHead>
           <TableRow>
-            {tableHeadRow.map(({ value }) => (
-              <TableCell>{value}</TableCell>
+            {tableHeadRows.map(({ value }) => (
+              <TableCell style={{ fontWeight: 'bold' }}>{value}</TableCell>
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
-          {tableBodyRow.map(({ rowData, _id }) => (
+          {tableBodyRows.map(({ rowData, _id }) => (
             <TableRow key={_id}>
-              {rowData.map(({ value, align }) => (
-                <TableCell align={align}>{value}</TableCell>
+              {rowData.map(({ align, value }) => (
+                <>
+                  {value !== 'actions' ? (
+                    <TableCell align={align}>{value}</TableCell>
+                  ) : (
+                    <TableCell align={align}>
+                      <ActionsMenu />
+                    </TableCell>
+                  )}
+                </>
               ))}
             </TableRow>
           ))}
         </TableBody>
-      </MUITalbe>
+      </MUITable>
     </TableContainer>
   );
 };
