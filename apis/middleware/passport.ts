@@ -104,10 +104,22 @@ export const checkIfAdmin = (request: Request, response: Response, next: NextFun
 
 export const checkCategory = (request: Request, response: Response, next: NextFunction) => {
   const {
-    body: { category: userCategory },
-    user
+    body: { category: userCategory }
   } = request;
   if (userCategory !== 'admin') return next();
-  else if (userCategory === 'admin' && user && user.category === 'admin') return next();
+  else if (userCategory === 'admin') {
+    return authenticate('jwt', { session: false }, (error, user, info) => {
+      if (error) {
+        failure(response, error, `Authentication Failed.`, 401);
+      } else if (!user) {
+        failure(response, info.message, `Authentication Failed.`, 401);
+      } else if (user && user.category !== 'admin') {
+        failure(response, info.message, `Authentication Failed.`, 401);
+      } else {
+        request.user = user;
+        next();
+      }
+    })(request, response, next);
+  }
   return failure(response, `User is not admin`, 'Authentication Failed', 401);
 };

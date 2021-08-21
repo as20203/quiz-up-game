@@ -29,11 +29,18 @@ export const Header = () => {
         </>
       )}
       {user && user.category === 'admin' && (
-        <HeaderItem padding={10} to='/categories'>
+        <HeaderItem padding={10} to='/users'>
           {' '}
-          Add Categories{' '}
+          Users{' '}
         </HeaderItem>
       )}
+      {user && user.category === 'admin' && (
+        <HeaderItem padding={10} to='/categories'>
+          {' '}
+          Categories{' '}
+        </HeaderItem>
+      )}
+
       {user && (
         <HeaderItem onClick={() => logout()} marginLeft='auto' padding={10} to='#'>
           {' '}

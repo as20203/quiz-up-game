@@ -94,6 +94,46 @@ export const getUser = async (request: Request, response: Response) => {
 /**
  * @swagger
  *
+ *  /api/users/:
+ *   get:
+ *     tags:
+ *       - User
+ *     summary: Get Details of a specific user
+ *     security:
+ *      - bearerAuth: []
+ *
+ *     responses:
+ *       200:
+ *         description: Data Sent
+ *       500:
+ *         description: Internal Server Error
+ *       404:
+ *         description: Not Found.
+ */
+export const getUsers = async (_: Request, response: Response) => {
+  try {
+    const retrievedUsers = await User.getUsers({});
+    if (!retrievedUsers.isExecuted) {
+      return failure(
+        response,
+        retrievedUsers.error,
+        `Couldn't retrieve user details.`,
+        retrievedUsers.statusCode
+      );
+    }
+    return success(
+      response,
+      { users: retrievedUsers.data },
+      'Successfully retrieved user details.'
+    );
+  } catch (error) {
+    return failure(response, error.message, `Couldn't retrieve user`);
+  }
+};
+
+/**
+ * @swagger
+ *
  * /api/users/{id}:
  *   patch:
  *     tags:

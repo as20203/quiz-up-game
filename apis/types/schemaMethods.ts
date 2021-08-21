@@ -17,6 +17,9 @@ export interface UserSchemaMethods extends Model<UserSchema> {
     userId: string,
     data: UserSchemaData
   ): Promise<SchemaMethodsResponse<UserSchemaOutput>>;
+  getUsers(
+    conditions: Record<string, string | number> | {}
+  ): Promise<SchemaMethodsResponse<UserSchemaOutput[]>>;
 }
 
 export interface CategorySchemaMethods extends Model<CategorySchema> {
