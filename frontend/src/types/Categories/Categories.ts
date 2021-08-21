@@ -4,3 +4,4 @@ export interface CategorySchemaOutput {
   addedBy: string;
   addedOn: string;
 }
+export type ModalCategories = 'add' | 'edit' | 'delete' | '';

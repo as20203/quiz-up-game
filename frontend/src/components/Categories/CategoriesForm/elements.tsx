@@ -30,7 +30,7 @@ export const CategoriesFormStyles = withStyles({
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    background: '#FDFBF2',
+    background: 'white',
     fontFamily: 'Roboto',
     maxWidth: 'none'
   }
