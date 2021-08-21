@@ -74,3 +74,20 @@ User.deleteUser = async userId => {
     return modelFailureResponse(error.message);
   }
 };
+
+User.getUsers = async (conditions = {}) => {
+  try {
+    const retrievedUsers = await User.aggregate([
+      {
+        $match: conditions
+      }
+    ]);
+    if (retrievedUsers.length > 0) {
+      return modelSuccessResponse(retrievedUsers);
+    } else {
+      return modelFailureResponse(`Couldn't find users.`, 404);
+    }
+  } catch (error) {
+    return modelFailureResponse(error.message);
+  }
+};

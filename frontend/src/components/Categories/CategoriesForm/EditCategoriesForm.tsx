@@ -57,7 +57,7 @@ export const EditCategoriesForm = ({
   };
   return (
     <CategoriesFormStyles onSubmit={handleSubmit}>
-      <Typography variant='h3'> Add Category</Typography>
+      <Typography variant='h3'> {`Edit Category`}</Typography>
       <InputFormGroup
         style={styles.input}
         label='Name:'

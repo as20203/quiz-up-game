@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { addUser, getUser, updateUser, deleteUser } from '~/controllers';
+import { addUser, getUser, updateUser, deleteUser, getUsers } from '~/controllers';
 import {
   authenticationHandler,
   checkCategory,
@@ -11,9 +11,16 @@ import {
 export const userRouter = Router();
 
 userRouter.post('/', checkCategory, validateUser, addUser);
+userRouter.get('/', authenticationHandler('jwt'), checkIfAdmin, getUsers);
 
-userRouter.get('/:id', checkIfAdmin, getUser);
+userRouter.get('/:id', authenticationHandler('jwt'), checkIfAdmin, getUser);
 
 userRouter.delete('/:id', authenticationHandler('jwt'), checkIfAdmin, deleteUser);
 
-userRouter.patch('/:id', checkIfAdmin, validateModifiedUser, updateUser);
+userRouter.patch(
+  '/:id',
+  authenticationHandler('jwt'),
+  checkIfAdmin,
+  validateModifiedUser,
+  updateUser
+);

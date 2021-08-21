@@ -2,6 +2,7 @@ import { PaginatedResults, UserSchemaOutput, UserController, CategorySchemaOutpu
 
 export type SchemaMethodsDataResponse =
   | UserSchemaOutput
+  | UserSchemaOutput[]
   | CategorySchemaOutput
   | CategorySchemaOutput[];
 
