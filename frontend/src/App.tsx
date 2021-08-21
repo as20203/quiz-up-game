@@ -5,7 +5,8 @@ import {
   Signup,
   PrivateRoute,
   CategoriesPage,
-  UsersPage
+  UsersPage,
+  QuestionsPage
 } from 'components';
 import { Router, Route, Switch } from 'react-router-dom';
 import history from 'MyHistory';
@@ -21,7 +22,7 @@ const App = () => {
           <PrivateRoute isAdmin={true} path='/categories' component={CategoriesPage} />
           <PrivateRoute isAdmin={true} path='/categories' component={CategoriesPage} />
           <PrivateRoute isAdmin={true} path='/users' component={UsersPage} />
-
+          <PrivateRoute isAdmin={true} path='/questions' component={QuestionsPage} />
           <Route exact path='/' component={Landing} />
         </Switch>
       </Router>

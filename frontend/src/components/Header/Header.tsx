@@ -40,6 +40,12 @@ export const Header = () => {
           Categories{' '}
         </HeaderItem>
       )}
+      {user && (user.category === 'admin' || user.category === 'contributor') && (
+        <HeaderItem marginLeft='none' padding={10} to='/questions'>
+          {' '}
+          Questions{' '}
+        </HeaderItem>
+      )}
 
       {user && (
         <HeaderItem onClick={() => logout()} marginLeft='auto' padding={10} to='#'>

@@ -5,7 +5,10 @@ import {
   SchemaMethodsResponse,
   UserSchemaOutput,
   CategorySchemaData,
-  CategorySchemaOutput
+  CategorySchemaOutput,
+  QuestionSchema,
+  QuestionSchemaData,
+  QuestionSchemaOutput
 } from '~/types';
 import { Model } from 'mongoose';
 
@@ -33,4 +36,17 @@ export interface CategorySchemaMethods extends Model<CategorySchema> {
   getCategories(
     conditions: Record<string, string | number> | {}
   ): Promise<SchemaMethodsResponse<CategorySchemaOutput[]>>;
+}
+
+export interface QuestionSchemaMethods extends Model<QuestionSchema> {
+  save(data: QuestionSchemaData): Promise<SchemaMethodsResponse<QuestionSchemaOutput>>;
+  getQuestion(questionId: string): Promise<SchemaMethodsResponse<QuestionSchemaOutput>>;
+  deleteQuestion(questionId: string): Promise<SchemaMethodsResponse<QuestionSchemaOutput>>;
+  updateQuestion(
+    questionId: string,
+    data: QuestionSchemaData
+  ): Promise<SchemaMethodsResponse<QuestionSchemaOutput>>;
+  getQuestions(
+    conditions: Record<string, string | number> | {}
+  ): Promise<SchemaMethodsResponse<QuestionSchemaOutput[]>>;
 }

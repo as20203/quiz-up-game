@@ -1,26 +1,29 @@
-import { CategoriesFormStyles, CategoriesButton } from './elements';
+import { QuestionFormStyles, QuestionButton } from './elements';
 import { InputFormGroup, OptionFormGroup } from 'components';
 import { useForm } from 'customHooks';
+import { UserSchemaOutput, ModalCategories, TableSetState } from 'types';
 import { FormEvent, useState } from 'react';
 import { Typography } from '@material-ui/core';
 import axios from 'axios';
-import { TableSetState, ModalCategories, UserSchemaOutput } from 'types';
-interface AddUserFormProps {
+interface EditCategoriesFormProps {
+  retrievedUser: UserSchemaOutput;
   setOpenModal: TableSetState<boolean>;
-  setModalCategory: TableSetState<ModalCategories>;
   setUpdatedUsers: TableSetState<UserSchemaOutput[]>;
+  setModalCategory: TableSetState<ModalCategories>;
 }
-export const AddUserForm = ({
+export const EditUserForm = ({
+  retrievedUser: { username, name, category, _id: retrievedUserId },
   setOpenModal,
-  setModalCategory,
-  setUpdatedUsers
-}: AddUserFormProps) => {
+  setUpdatedUsers,
+  setModalCategory
+}: EditCategoriesFormProps) => {
   const [user, handleUser, setUser] = useForm({
-    username: '',
+    username,
     password: '',
-    name: '',
-    category: 'player'
+    name,
+    category
   });
+
   const styles = {
     input: {
       border: 'none',
@@ -35,8 +38,20 @@ export const AddUserForm = ({
       event.preventDefault();
       setDisable(true);
       const {
-        data: { user: newUser }
-      }: { data: { user: UserSchemaOutput } } = await axios.post('/api/users', user);
+        data: { user: updatedUser }
+      }: { data: { user: UserSchemaOutput } } = await axios.patch(
+        `/api/users/${retrievedUserId}`,
+        user
+      );
+      setUpdatedUsers(users => {
+        const categoriesCopy: UserSchemaOutput[] = JSON.parse(JSON.stringify(users));
+        const retrievedCategoryIndex = categoriesCopy.findIndex(
+          ({ _id }) => _id === updatedUser._id
+        );
+        if (retrievedCategoryIndex !== -1) categoriesCopy[retrievedCategoryIndex] = updatedUser;
+
+        return categoriesCopy;
+      });
       setUser({
         username: '',
         password: '',
@@ -44,11 +59,6 @@ export const AddUserForm = ({
         category: 'player'
       });
       setModalCategory('');
-      setUpdatedUsers(users => {
-        const usersCopy: UserSchemaOutput[] = JSON.parse(JSON.stringify(users));
-        usersCopy.push(newUser);
-        return usersCopy;
-      });
       setOpenModal(false);
       setDisable(false);
     } catch (error) {
@@ -56,8 +66,8 @@ export const AddUserForm = ({
     }
   };
   return (
-    <CategoriesFormStyles onSubmit={handleSubmit}>
-      <Typography variant='h4'> Add User</Typography>
+    <QuestionFormStyles onSubmit={handleSubmit}>
+      <Typography variant='h4'> {`Edit User`}</Typography>
       <InputFormGroup
         style={styles.input}
         label='Name:'
@@ -97,7 +107,6 @@ export const AddUserForm = ({
         id='password'
         placeholder='Enter your password'
       />
-
       <OptionFormGroup
         label='Sign up As'
         value={user.category}
@@ -113,7 +122,7 @@ export const AddUserForm = ({
         ]}
       />
 
-      <CategoriesButton
+      <QuestionButton
         textColor='white'
         variant='contained'
         disabled={disable}
@@ -121,7 +130,7 @@ export const AddUserForm = ({
         type='submit'
       >
         {disable ? 'Submitting' : 'Submit'}
-      </CategoriesButton>
-    </CategoriesFormStyles>
+      </QuestionButton>
+    </QuestionFormStyles>
   );
 };

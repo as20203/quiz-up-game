@@ -15,3 +15,10 @@ export interface AuthController {
 export interface CategoryController {
   name: string;
 }
+
+export interface QuestionControlelr {
+  text: string;
+  choices: string[];
+  answer: string;
+  categoryId: string;
+}

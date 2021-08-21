@@ -13,3 +13,11 @@ export interface CategorySchema extends Document {
   addedOn: Date;
   addedBy: string;
 }
+
+export interface QuestionSchema extends Document {
+  text: string;
+  choices: string[];
+  answer: string;
+  categoryId: string;
+  addedBy: string;
+}
