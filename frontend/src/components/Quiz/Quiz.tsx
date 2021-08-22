@@ -53,6 +53,18 @@ export const QuizPage = () => {
   };
 
   useEffect(() => {
+    const saveScore = async () => {
+      try {
+        await axios.post(`/api/quizzes`, {
+          score,
+          categoryId: category.key
+        });
+      } catch {}
+    };
+    if (gameEnded) saveScore();
+  }, [gameEnded, category.key, score]);
+
+  useEffect(() => {
     const fadeInCategorySelection = setTimeout(() => {
       setCategorySelectionFade(true);
     }, 500);
@@ -151,9 +163,10 @@ export const QuizPage = () => {
       </Fade>
       <Fade in={gameEnded}>
         <QuizContainer showDisplay={gameEnded}>
-          <Typography variant='body1'>{`Game over. You have scored ${score}`}</Typography>
+          <Typography variant='body1'>{`Game over. You have scored ${score} points. `}</Typography>
           <QuizButton
             onClick={() => {
+              setScore(0);
               setCategorySelectionFade(true);
               setquizInfoFade(false);
               setGameEnded(false);

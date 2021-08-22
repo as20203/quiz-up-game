@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Radio, RadioGroup, FormControlLabel, FormControl, FormLabel } from '@material-ui/core';
 import { QuestionSchemaOutput, TableSetState } from 'types';
 import { QuizButton } from './elements';
@@ -18,6 +18,9 @@ export const QuizSelection = ({
   const [value, setValue] = React.useState(choices[0]);
   const [, setQuestionNumber] = useState(0);
 
+  useEffect(() => {
+    setValue(choices[0]);
+  }, [choices]);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue((event.target as HTMLInputElement).value);
   };

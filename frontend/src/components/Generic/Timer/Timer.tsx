@@ -7,8 +7,8 @@ interface TimerProps {
   setGameEnded: TableSetState<boolean>;
 }
 export const Timer = ({ start, setStart, setGameEnded }: TimerProps) => {
-  const [counter, setCounter] = useState(10);
-  const resetCounter = () => setCounter(10);
+  const [counter, setCounter] = useState(60);
+  const resetCounter = () => setCounter(60);
   useEffect(() => {
     if (start) {
       const timeout = setTimeout(() => {

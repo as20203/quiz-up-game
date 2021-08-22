@@ -77,12 +77,12 @@ export const validateModifiedQuiz = async (
     }
 
     if (validationErrors.length > 0) {
-      return failure(response, validationErrors, `Couldn't validate user form fields`, 400);
+      return failure(response, validationErrors, `Couldn't validate quiz form fields`, 400);
     } else {
       request.quiz = quiz;
       return next();
     }
   } catch (error) {
-    return failure(response, error.message, `Couldn't validate user form fields`);
+    return failure(response, error.message, `Couldn't validate quiz form fields`);
   }
 };

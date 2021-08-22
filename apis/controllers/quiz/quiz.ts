@@ -34,8 +34,8 @@ import { Quiz } from '~/models';
  */
 export const addQuiz = async (request: Request<QuizController>, response: Response) => {
   try {
-    const { question } = request;
-    const newQuiz = await Quiz.save(question);
+    const { quiz } = request;
+    const newQuiz = await Quiz.save(quiz);
     if (!newQuiz.isExecuted) {
       return failure(response, newQuiz.error, `Couldn't save quiz.`);
     }
@@ -197,10 +197,10 @@ export const getQuizzes = async (request: Request, response: Response) => {
 export const updateQuiz = async (request: Request<Partial<QuizController>>, response: Response) => {
   try {
     const {
-      question,
+      quiz,
       params: { id }
     } = request;
-    const updatedQuiz = await Quiz.updateQuiz(id, question);
+    const updatedQuiz = await Quiz.updateQuiz(id, quiz);
     if (!updatedQuiz.isExecuted) {
       return failure(response, updatedQuiz.error, `Couldn't update quiz.`, updatedQuiz.statusCode);
     }
