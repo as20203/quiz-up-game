@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as JwtStrategy, StrategyOptions } from 'passport-jwt';
 import { ExtractJwt } from 'passport-jwt';
-import { User } from '~/models';
+import { Question, User } from '~/models';
 import { FailureMessages, PassportMiddleware } from '~/types';
 import { comparePasswordHash, failure } from '~/utils';
 const environment = process.env;
@@ -99,6 +99,27 @@ export const checkIfAdmin = (request: Request, response: Response, next: NextFun
   } = request;
   if (category !== 'admin')
     return failure(response, `User is not admin`, 'Authentication Failed', 401);
+  return next();
+};
+
+export const questionAccess = async (request: Request, response: Response, next: NextFunction) => {
+  const {
+    params: { id },
+    user: { category, _id: userId }
+  } = request;
+  if (category === 'player')
+    return failure(response, `User is not authorized`, 'Authentication Failed', 401);
+  else if (category === 'contributor') {
+    if (id) {
+      const retrievedQuestion = await Question.getQuestion(id);
+      if (!retrievedQuestion.isExecuted) {
+        return failure(response, `User is not authorized`, 'Authentication Failed', 401);
+      }
+      const { addedBy } = retrievedQuestion.data;
+      if (addedBy !== userId.toString())
+        return failure(response, `User is not authorized`, 'Authentication Failed', 401);
+    }
+  }
   return next();
 };
 

@@ -1,10 +1,18 @@
-import { PaginatedResults, UserSchemaOutput, UserController, CategorySchemaOutput } from '~/types';
+import {
+  PaginatedResults,
+  UserSchemaOutput,
+  UserController,
+  CategorySchemaOutput,
+  QuestionSchemaOutput
+} from '~/types';
 
 export type SchemaMethodsDataResponse =
   | UserSchemaOutput
   | UserSchemaOutput[]
   | CategorySchemaOutput
-  | CategorySchemaOutput[];
+  | CategorySchemaOutput[]
+  | QuestionSchemaOutput
+  | QuestionSchemaOutput[];
 
 export type PaginatedSchemas = UserSchemaOutput[];
 

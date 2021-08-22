@@ -63,10 +63,11 @@ databaseConnection(db);
 import { authenticateUser } from '~/middleware';
 authenticateUser(passport);
 //Importing routes
-import { authenticationRouter, userRouter, categoryRouter } from '~/routes';
+import { authenticationRouter, userRouter, categoryRouter, questionRouter } from '~/routes';
 app.use('/api/users', userRouter);
 app.use('/api/auth', authenticationRouter);
 app.use('/api/categories', categoryRouter);
+app.use('/api/questions', questionRouter);
 
 const swaggerDefinition = {
   openapi: '3.0.0',

@@ -97,6 +97,7 @@ export const AddUserForm = ({
         id='password'
         placeholder='Enter your password'
       />
+
       <OptionFormGroup
         label='Sign up As'
         value={user.category}

@@ -18,7 +18,7 @@ export const categoryRouter = Router();
 categoryRouter.post('/', authenticationHandler('jwt'), checkIfAdmin, validateCategory, addCategory);
 
 categoryRouter.get('/:id', authenticationHandler('jwt'), checkIfAdmin, getCategory);
-categoryRouter.get('/', authenticationHandler('jwt'), checkIfAdmin, getCategories);
+categoryRouter.get('/', authenticationHandler('jwt'), getCategories);
 
 categoryRouter.delete('/:id', authenticationHandler('jwt'), checkIfAdmin, deleteCategory);
 

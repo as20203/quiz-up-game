@@ -11,3 +11,11 @@ export interface CategorySchemaData {
   name?: string;
   addedBy?: string;
 }
+
+export interface QuestionSchemaData {
+  text?: string;
+  choices?: string[];
+  answer?: string;
+  categoryId?: string;
+  addedBy?: string;
+}
