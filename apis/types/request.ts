@@ -4,6 +4,8 @@ import { ParamsDictionary } from 'express-serve-static-core';
 
 export type Query = {
   name: string;
+  categoryId: string;
+  getMyQuiz: string;
 };
 export type Request<T extends RequestBodyControllers = {}> = CustomRequest<
   ParamsDictionary,

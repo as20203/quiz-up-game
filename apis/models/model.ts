@@ -6,9 +6,13 @@ import {
   CategorySchemaMethods,
   CategorySchema,
   QuestionSchema,
-  QuestionSchemaMethods
+  QuestionSchemaMethods,
+  QuizSchema,
+  QuizSchemaMethods
 } from '~/types';
+import { quizSchema } from './schemas';
 
 export const User = model<UserSchema, UserSchemaMethods>('User', userSchema);
 export const Category = model<CategorySchema, CategorySchemaMethods>('Category', categorySchema);
-export const Question = model<QuestionSchema, QuestionSchemaMethods>('Quiz', questionSchema);
+export const Question = model<QuestionSchema, QuestionSchemaMethods>('Question', questionSchema);
+export const Quiz = model<QuizSchema, QuizSchemaMethods>('Quiz', quizSchema);

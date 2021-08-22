@@ -3,7 +3,8 @@ import {
   UserSchemaOutput,
   UserController,
   CategorySchemaOutput,
-  QuestionSchemaOutput
+  QuestionSchemaOutput,
+  QuizSchemaOutput
 } from '~/types';
 
 export type SchemaMethodsDataResponse =
@@ -12,7 +13,9 @@ export type SchemaMethodsDataResponse =
   | CategorySchemaOutput
   | CategorySchemaOutput[]
   | QuestionSchemaOutput
-  | QuestionSchemaOutput[];
+  | QuestionSchemaOutput[]
+  | QuizSchemaOutput
+  | QuizSchemaOutput[];
 
 export type PaginatedSchemas = UserSchemaOutput[];
 

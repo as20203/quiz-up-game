@@ -21,3 +21,10 @@ export interface QuestionSchema extends Document {
   categoryId: string;
   addedBy: string;
 }
+
+export interface QuizSchema extends Document {
+  score: number;
+  categoryId: string;
+  takenBy: string;
+  adddedOn: string;
+}

@@ -19,3 +19,10 @@ export interface QuestionSchemaData {
   categoryId?: string;
   addedBy?: string;
 }
+
+export interface QuizSchemaData {
+  score?: number;
+  categoryId?: string;
+  takenBy?: string;
+  adddedOn?: string;
+}

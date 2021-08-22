@@ -1,4 +1,10 @@
-import { UserSchemaData, User, CategorySchemaData, QuestionSchemaData } from '~/types';
+import {
+  UserSchemaData,
+  User,
+  CategorySchemaData,
+  QuestionSchemaData,
+  QuizSchemaData
+} from '~/types';
 
 declare module 'express-serve-static-core' {
   export interface Request {
@@ -6,5 +12,6 @@ declare module 'express-serve-static-core' {
     client: UserSchemaData;
     category: CategorySchemaData;
     question: QuestionSchemaData;
+    quiz: QuizSchemaData;
   }
 }
