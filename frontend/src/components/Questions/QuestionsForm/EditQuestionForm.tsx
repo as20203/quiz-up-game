@@ -71,7 +71,7 @@ export const EditQuestionsForm = ({
   };
   return (
     <QuestionFormStyles onSubmit={handleSubmit}>
-      <Typography variant='h4'> {`Edit Question ${retrievedQuestion._id}`}</Typography>
+      <Typography variant='h4'> {`Edit Question`}</Typography>
       <InputFormGroup
         style={styles.input}
         label='Text:'

@@ -6,6 +6,7 @@ import {
   PrivateRoute,
   CategoriesPage,
   UsersPage,
+  QuizPage,
   QuestionsPage
 } from 'components';
 import { Router, Route, Switch } from 'react-router-dom';
@@ -22,6 +23,8 @@ const App = () => {
           <PrivateRoute isAdmin={true} path='/categories' component={CategoriesPage} />
           <PrivateRoute isAdmin={true} path='/categories' component={CategoriesPage} />
           <PrivateRoute isAdmin={true} path='/users' component={UsersPage} />
+          <PrivateRoute path='/quiz' component={QuizPage} />
+
           <PrivateRoute
             isContributor={true}
             isAdmin={true}

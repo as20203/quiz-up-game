@@ -34,6 +34,12 @@ export const Header = () => {
           Users{' '}
         </HeaderItem>
       )}
+      {user && user.category === 'player' && (
+        <HeaderItem padding={10} to='/quiz'>
+          {' '}
+          Quiz{' '}
+        </HeaderItem>
+      )}
       {user && user.category === 'admin' && (
         <HeaderItem padding={10} to='/categories'>
           {' '}

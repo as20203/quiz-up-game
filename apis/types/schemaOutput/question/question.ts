@@ -8,4 +8,5 @@ export interface QuestionSchemaOutput {
 }
 export type QuestionQuery = {
   addedBy: string;
+  categoryId: string;
 };

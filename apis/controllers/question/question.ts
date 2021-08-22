@@ -109,6 +109,13 @@ export const getQuestion = async (request: Request, response: Response) => {
  *     summary: Get Details of a questions
  *     security:
  *      - bearerAuth: []
+ *     parameters:
+ *      - in: query
+ *        name: categoryId
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description:  ObjectId of the Category to get questions
  *
  *     responses:
  *       200:
@@ -121,11 +128,15 @@ export const getQuestion = async (request: Request, response: Response) => {
 export const getQuestions = async (request: Request, response: Response) => {
   try {
     const {
-      user: { category, _id }
+      user: { category, _id },
+      query: { categoryId }
     } = request;
     const questionQuery = {} as QuestionQuery;
     if (category === 'contributor') {
       questionQuery.addedBy = _id.toString();
+    }
+    if (categoryId) {
+      questionQuery.categoryId = categoryId;
     }
     const retrievedQuestions = await Question.getQuestions(questionQuery);
     if (!retrievedQuestions.isExecuted) {
