@@ -22,3 +22,8 @@ export interface QuestionControlelr {
   answer: string;
   categoryId: string;
 }
+
+export interface QuizController {
+  score: number;
+  categoryId: string;
+}

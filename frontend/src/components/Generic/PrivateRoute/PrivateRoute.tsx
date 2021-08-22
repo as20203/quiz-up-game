@@ -35,7 +35,7 @@ const PrivateRoute: FC<PrivateRouteProps> = ({
         if (token) {
           const verifyToken = await axios.post('/api/auth/verify-token');
           if (verifyToken) {
-            if (isAdmin && !isContributor) {
+            if (isAdmin) {
               const {
                 data: {
                   user: { category }
@@ -44,8 +44,7 @@ const PrivateRoute: FC<PrivateRouteProps> = ({
               if (category !== 'admin') {
                 throw new Error('Not Authenticated');
               }
-            }
-            if (isContributor) {
+            } else if (isContributor) {
               const {
                 data: {
                   user: { category }

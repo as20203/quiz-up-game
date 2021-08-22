@@ -16,7 +16,9 @@ const Landing = () => {
     const { user } = authentication;
     if (user && user.category === 'admin') history.push('/categories');
     else if (user && user.category === 'admin') history.push('/signup');
-    else history.push('/');
+    else if (user && user.category === 'contributor') history.push('/questions');
+    else if (user && user.category === 'player') history.push('/quiz');
+    else history.push('/signup');
   };
   const [fade, setFade] = useState(false);
   useEffect(() => {

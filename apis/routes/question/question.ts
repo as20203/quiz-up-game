@@ -24,7 +24,7 @@ questionRouter.post(
 );
 
 questionRouter.get('/:id', authenticationHandler('jwt'), questionAccess, getQuestion);
-questionRouter.get('/', authenticationHandler('jwt'), questionAccess, getQuestions);
+questionRouter.get('/', authenticationHandler('jwt'), getQuestions);
 
 questionRouter.delete('/:id', authenticationHandler('jwt'), questionAccess, deleteQuestion);
 
