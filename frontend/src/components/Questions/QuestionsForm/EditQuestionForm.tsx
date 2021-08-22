@@ -1,28 +1,33 @@
 import { QuestionFormStyles, QuestionButton } from './elements';
 import { InputFormGroup, OptionFormGroup } from 'components';
-import { useForm } from 'customHooks';
-import { UserSchemaOutput, ModalCategories, TableSetState } from 'types';
+import { QuestionChoicesSelection } from '../QuestionChoiceSelection';
 import { FormEvent, useState } from 'react';
 import { Typography } from '@material-ui/core';
 import axios from 'axios';
-interface EditCategoriesFormProps {
-  retrievedUser: UserSchemaOutput;
+import { TableSetState, ModalCategories, QuestionSchemaOutput } from 'types';
+interface AddUserFormProps {
+  retrievedQuestion: QuestionSchemaOutput;
   setOpenModal: TableSetState<boolean>;
-  setUpdatedUsers: TableSetState<UserSchemaOutput[]>;
   setModalCategory: TableSetState<ModalCategories>;
+  categories: { key: string; value: string }[];
+  setUpdatedQuestions: TableSetState<QuestionSchemaOutput[]>;
 }
-export const EditUserForm = ({
-  retrievedUser: { username, name, category, _id: retrievedUserId },
+export const EditQuestionsForm = ({
+  retrievedQuestion,
   setOpenModal,
-  setUpdatedUsers,
-  setModalCategory
-}: EditCategoriesFormProps) => {
-  const [user, handleUser, setUser] = useForm({
-    username,
-    password: '',
-    name,
-    category
+  setModalCategory,
+  categories,
+  setUpdatedQuestions
+}: AddUserFormProps) => {
+  const [category, setCategory] = useState({
+    key: retrievedQuestion.category._id,
+    value: retrievedQuestion.category.name
   });
+  const [text, setText] = useState(retrievedQuestion.text);
+  const [choices, setChoices] = useState(retrievedQuestion.choices);
+  const [selectedIndex, setSelectedIndex] = useState<number>(
+    choices.findIndex(choice => choice === retrievedQuestion.answer)
+  );
 
   const styles = {
     input: {
@@ -37,26 +42,25 @@ export const EditUserForm = ({
     try {
       event.preventDefault();
       setDisable(true);
+      const question = {
+        categoryId: category.key,
+        choices,
+        answer: choices[selectedIndex],
+        text
+      };
       const {
-        data: { user: updatedUser }
-      }: { data: { user: UserSchemaOutput } } = await axios.patch(
-        `/api/users/${retrievedUserId}`,
-        user
+        data: { question: updatedQuestion }
+      }: { data: { question: QuestionSchemaOutput } } = await axios.patch(
+        `/api/questions/${retrievedQuestion._id}`,
+        question
       );
-      setUpdatedUsers(users => {
-        const categoriesCopy: UserSchemaOutput[] = JSON.parse(JSON.stringify(users));
-        const retrievedCategoryIndex = categoriesCopy.findIndex(
-          ({ _id }) => _id === updatedUser._id
+      setUpdatedQuestions(questions => {
+        const questionsCopy: QuestionSchemaOutput[] = JSON.parse(JSON.stringify(questions));
+        const retrievedQuestionIndex = questionsCopy.findIndex(
+          ({ _id }) => _id === updatedQuestion._id
         );
-        if (retrievedCategoryIndex !== -1) categoriesCopy[retrievedCategoryIndex] = updatedUser;
-
-        return categoriesCopy;
-      });
-      setUser({
-        username: '',
-        password: '',
-        name: '',
-        category: 'player'
+        if (retrievedQuestionIndex !== -1) questionsCopy[retrievedQuestionIndex] = updatedQuestion;
+        return questionsCopy;
       });
       setModalCategory('');
       setOpenModal(false);
@@ -67,61 +71,40 @@ export const EditUserForm = ({
   };
   return (
     <QuestionFormStyles onSubmit={handleSubmit}>
-      <Typography variant='h4'> {`Edit User`}</Typography>
+      <Typography variant='h4'> {`Edit Question ${retrievedQuestion._id}`}</Typography>
       <InputFormGroup
         style={styles.input}
-        label='Name:'
-        value={user.name}
+        label='Text:'
+        value={text}
         required={true}
         onChange={event => {
-          handleUser(event);
+          setText(event.target.value);
         }}
         type='text'
-        name='name'
-        id='name'
-        placeholder='Enter your name'
+        name='text'
+        id='text'
+        placeholder='Enter your text'
       />
-      <InputFormGroup
-        style={styles.input}
-        label='Username:'
-        value={user.username}
-        required={true}
-        onChange={event => {
-          handleUser(event);
-        }}
-        type='text'
-        name='username'
-        id='username'
-        placeholder='Enter your username'
+      <QuestionChoicesSelection
+        selectedIndex={selectedIndex}
+        setSelectedIndex={setSelectedIndex}
+        setChoices={setChoices}
+        choices={choices}
       />
-      <InputFormGroup
-        style={styles.input}
-        label='Password:'
-        value={user.password}
-        required={true}
-        onChange={event => {
-          handleUser(event);
-        }}
-        type='password'
-        name='password'
-        id='password'
-        placeholder='Enter your password'
-      />
-      <OptionFormGroup
-        label='Sign up As'
-        value={user.category}
-        required={true}
-        onChange={event => {
-          handleUser(event);
-        }}
-        name='category'
-        options={[
-          { key: 'player', value: 'Player' },
-          { key: 'contributor', value: 'Contributor' },
-          { key: 'admin', value: 'Admin' }
-        ]}
-      />
-
+      {categories.length > 0 && (
+        <OptionFormGroup
+          label='Category'
+          value={category.key}
+          required={true}
+          onChange={event => {
+            setCategory(category => {
+              return { ...category, key: event.target.value } as { key: string; value: string };
+            });
+          }}
+          name='category'
+          options={categories}
+        />
+      )}
       <QuestionButton
         textColor='white'
         variant='contained'

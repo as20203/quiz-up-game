@@ -2,7 +2,7 @@ import { QuestionsMain } from './elements';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { SimpleModal, Table } from 'components';
-import { AddQuestionsForm, DeleteQuestionForm } from './QuestionsForm';
+import { AddQuestionsForm, DeleteQuestionForm, EditQuestionsForm } from './QuestionsForm';
 import { Add } from '@material-ui/icons';
 import { ModalCategories, BodyRow, QuestionSchemaOutput, CategorySchemaOutput } from 'types';
 import { IconButton, Typography } from '@material-ui/core';
@@ -24,18 +24,19 @@ export const QuestionsPage = () => {
             setOpenModal={setOpenModal}
           />
         );
-      //   case 'edit':
-      //     const retrievedEditRow = users.find(({ _id }) => _id === selectedElementId);
-      //     if (retrievedEditRow)
-      //       return (
-      //         <EditUserForm
-      //           setUpdatedUsers={setUsers}
-      //           setModalCategory={setModalCategory}
-      //           setOpenModal={setOpenModal}
-      //           retrievedUser={retrievedEditRow}
-      //         />
-      //       );
-      //     return undefined;
+      case 'edit':
+        const retrievedEditRow = questions.find(({ _id }) => _id === selectedElementId);
+        if (retrievedEditRow)
+          return (
+            <EditQuestionsForm
+              categories={categories}
+              setUpdatedQuestions={setQuestions}
+              setModalCategory={setModalCategory}
+              setOpenModal={setOpenModal}
+              retrievedQuestion={retrievedEditRow}
+            />
+          );
+        return undefined;
       case 'delete':
         const retrievedDeletedRow = questions.find(({ _id }) => _id === selectedElementId);
         if (retrievedDeletedRow)
@@ -55,7 +56,7 @@ export const QuestionsPage = () => {
   };
 
   const setQuestionTableRows = (questions: QuestionSchemaOutput[]) => {
-    const tableBodyRows = questions.map(({ _id, categoryId, text, answer }) => {
+    const tableBodyRows = questions.map(({ _id, category: { name }, text, answer }) => {
       return {
         _id,
         rowData: [
@@ -63,7 +64,7 @@ export const QuestionsPage = () => {
             value: text
           },
           {
-            value: categoryId
+            value: name
           },
           { value: answer },
           {
@@ -127,7 +128,7 @@ export const QuestionsPage = () => {
           <Table
             tableHeadRows={[
               { value: 'Text' },
-              { value: 'CategoryId' },
+              { value: 'Category' },
               { value: 'Answer' },
               { value: 'Questions' }
             ]}

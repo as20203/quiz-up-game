@@ -22,7 +22,12 @@ const App = () => {
           <PrivateRoute isAdmin={true} path='/categories' component={CategoriesPage} />
           <PrivateRoute isAdmin={true} path='/categories' component={CategoriesPage} />
           <PrivateRoute isAdmin={true} path='/users' component={UsersPage} />
-          <PrivateRoute isAdmin={true} path='/questions' component={QuestionsPage} />
+          <PrivateRoute
+            isContributor={true}
+            isAdmin={true}
+            path='/questions'
+            component={QuestionsPage}
+          />
           <Route exact path='/' component={Landing} />
         </Switch>
       </Router>

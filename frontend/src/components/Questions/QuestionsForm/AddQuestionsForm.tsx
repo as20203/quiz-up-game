@@ -35,7 +35,6 @@ export const AddQuestionsForm = ({
     try {
       event.preventDefault();
       setDisable(true);
-      console.log(category);
       const question = {
         categoryId: category.key,
         choices,

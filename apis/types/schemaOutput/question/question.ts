@@ -3,7 +3,7 @@ export interface QuestionSchemaOutput {
   text: string;
   choices: string[];
   answer: string;
-  categoryId: string;
+  category: { name: string; _id: string };
   addedBy: string;
 }
 export type QuestionQuery = {

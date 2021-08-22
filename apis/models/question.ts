@@ -1,4 +1,4 @@
-import { isValidObjectId } from 'mongoose';
+import { isValidObjectId, Types } from 'mongoose';
 import { Question } from '~/models';
 import { modelSuccessResponse, modelFailureResponse } from '~/utils';
 
@@ -6,7 +6,25 @@ Question.save = async data => {
   try {
     const newQuestion = new Question(data);
     const savedQuestion = await newQuestion.save();
-    const retrievedQuestion = savedQuestion.toObject();
+    const retrievedQuestion = (
+      await Question.aggregate([
+        {
+          $match: { _id: savedQuestion._id }
+        },
+        {
+          $lookup: {
+            from: 'categories',
+            let: { id: { $toObjectId: '$categoryId' } },
+            pipeline: [
+              { $match: { $expr: { $eq: ['$_id', '$$id'] } } },
+              { $project: { _id: 1, name: 1 } }
+            ],
+            as: 'category'
+          }
+        },
+        { $unwind: { path: '$category', preserveNullAndEmptyArrays: true } }
+      ])
+    )[0];
     return modelSuccessResponse(retrievedQuestion);
   } catch (error) {
     return modelFailureResponse(error.message);
@@ -14,13 +32,31 @@ Question.save = async data => {
 };
 
 Question.getQuestion = async questionId => {
+  const ObjectId = Types.ObjectId;
+
   try {
     if (isValidObjectId(questionId)) {
-      const retrievedQuestion = await Question.findOne({
-        _id: questionId
-      });
+      const retrievedQuestion = (
+        await Question.aggregate([
+          {
+            $match: { _id: ObjectId(questionId) }
+          },
+          {
+            $lookup: {
+              from: 'categories',
+              let: { id: { $toObjectId: '$categoryId' } },
+              pipeline: [
+                { $match: { $expr: { $eq: ['$_id', '$$id'] } } },
+                { $project: { _id: 1, name: 1 } }
+              ],
+              as: 'category'
+            }
+          },
+          { $unwind: { path: '$category', preserveNullAndEmptyArrays: true } }
+        ])
+      )[0];
       if (retrievedQuestion) {
-        return modelSuccessResponse(retrievedQuestion.toObject());
+        return modelSuccessResponse(retrievedQuestion);
       } else {
         return modelFailureResponse(`Couldn't find question.`, 404);
       }
@@ -41,7 +77,26 @@ Question.updateQuestion = async (questionId, data) => {
         context: 'query'
       }).exec();
       if (updatedQuestion) {
-        return modelSuccessResponse(updatedQuestion);
+        const retrievedQuestion = (
+          await Question.aggregate([
+            {
+              $match: { _id: updatedQuestion._id }
+            },
+            {
+              $lookup: {
+                from: 'categories',
+                let: { id: { $toObjectId: '$categoryId' } },
+                pipeline: [
+                  { $match: { $expr: { $eq: ['$_id', '$$id'] } } },
+                  { $project: { _id: 1, name: 1 } }
+                ],
+                as: 'category'
+              }
+            },
+            { $unwind: { path: '$category', preserveNullAndEmptyArrays: true } }
+          ])
+        )[0];
+        return modelSuccessResponse(retrievedQuestion);
       } else {
         return modelFailureResponse(`Couldn't find question.`, 404);
       }
@@ -63,7 +118,7 @@ Question.deleteQuestion = async questionId => {
         { select: { addedOn: 0 } }
       );
       if (deletedQuestion) {
-        return modelSuccessResponse(deletedQuestion);
+        return modelSuccessResponse(deletedQuestion.toObject());
       } else {
         return modelFailureResponse(`Couldn't find question.`, 404);
       }
@@ -80,7 +135,19 @@ Question.getQuestions = async (conditions = {}) => {
     const retrievedQuestions = await Question.aggregate([
       {
         $match: conditions
-      }
+      },
+      {
+        $lookup: {
+          from: 'categories',
+          let: { id: { $toObjectId: '$categoryId' } },
+          pipeline: [
+            { $match: { $expr: { $eq: ['$_id', '$$id'] } } },
+            { $project: { _id: 1, name: 1 } }
+          ],
+          as: 'category'
+        }
+      },
+      { $unwind: { path: '$category', preserveNullAndEmptyArrays: true } }
     ]);
     if (retrievedQuestions.length > 0) {
       return modelSuccessResponse(retrievedQuestions);

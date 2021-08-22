@@ -15,9 +15,15 @@ interface PrivateRouteProps {
     >
   >;
   isAdmin?: boolean;
+  isContributor?: boolean;
   path: string;
 }
-const PrivateRoute: FC<PrivateRouteProps> = ({ component: Component, isAdmin, ...rest }) => {
+const PrivateRoute: FC<PrivateRouteProps> = ({
+  component: Component,
+  isAdmin,
+  isContributor,
+  ...rest
+}) => {
   const [, dispatch] = useContext(authContext);
   const [authRoute, setAuthRoute] = useState(false);
 
@@ -29,13 +35,23 @@ const PrivateRoute: FC<PrivateRouteProps> = ({ component: Component, isAdmin, ..
         if (token) {
           const verifyToken = await axios.post('/api/auth/verify-token');
           if (verifyToken) {
-            if (isAdmin) {
+            if (isAdmin && !isContributor) {
               const {
                 data: {
                   user: { category }
                 }
               } = verifyToken;
               if (category !== 'admin') {
+                throw new Error('Not Authenticated');
+              }
+            }
+            if (isContributor) {
+              const {
+                data: {
+                  user: { category }
+                }
+              } = verifyToken;
+              if (category !== 'contributor') {
                 throw new Error('Not Authenticated');
               }
             }
@@ -57,7 +73,7 @@ const PrivateRoute: FC<PrivateRouteProps> = ({ component: Component, isAdmin, ..
       }
     };
     checkAuthentication();
-  }, [dispatch, isAdmin]);
+  }, [dispatch, isAdmin, isContributor]);
 
   return <Route {...rest} render={props => (authRoute ? <Component {...props} /> : null)} />;
 };
